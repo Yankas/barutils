@@ -60,10 +60,11 @@ let volume event =
     | Right | Update | Middle -> Some(out)
 
 let date event =
-    let time = Unix.time () |> Unix.localtime 
-    in
+    let time = Unix.time () |> Unix.localtime in
+    let out = Some (Printf.sprintf "🗓️%02i/%02i/%02i" (time.tm_mon + 1) time.tm_mday (time.tm_year mod 100)) in
     match event with
-        | _ -> Some (Printf.sprintf "🗓️%02i/%02i/%02i" (time.tm_mon + 1) time.tm_mday (time.tm_year mod 100))
+        | Left -> Unix.system "i3-msg -q [instance=\"popup-cale\"] scratchpad show && i3-msg -q [instance=\"popup-cale\"] move position center"  |> ignore; out
+        | _ -> out
 
 let updates event =
     let output = 
@@ -80,10 +81,11 @@ let updates event =
     match event with | _ -> Some output
 
 let time event =
-    let time = Unix.time () |> Unix.localtime 
-    in
+    let time = Unix.time () |> Unix.localtime in
+    let out = Some (Printf.sprintf "🕑%02i:%02i:%02i" time.tm_hour time.tm_min time.tm_sec) in
     match event with
-        | _ -> Some (Printf.sprintf "🕑%02i:%02i:%02i" time.tm_hour time.tm_min time.tm_sec)
+        | Left -> Unix.system "i3-msg -q [instance=\"popup-cale\"] scratchpad show && i3-msg -q [instance=\"popup-cale\"] move position center"  |> ignore; out
+        | _ -> out
         
 let weather event =
     let out = 
